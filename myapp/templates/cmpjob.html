@@ -1,0 +1,480 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft LinkedIn Page Clone</title>
+    <link href="/static/myapp/companysidejobpage.css?{% now " U" %}" rel="stylesheet">
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!--font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <header class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">FreshMinds</div>
+            <nav class="nav1">
+                <a href="/homepage">Home</a>
+                <a href="{% url 'list_job' organization.id %}">Hiring</a>
+                <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+                <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header bg-dark">
+                          <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body bg-dark">
+                          <ul class="list-group bg-dark">
+                            <li class="list-group-item bg-dark">
+                                <a href="#" class="text-decoration-none text-light">Edit Profile</a>
+                              </li>
+                              <li class="list-group-item bg-dark">
+                                <a href="#" class="text-decoration-none text-light">Create CV</a>
+                              </li>
+                              <li class="list-group-item bg-dark">
+                                <a href="#" class="text-decoration-none text-danger">Change Password</a>
+                              </li>
+                              <li class="list-group-item bg-dark">
+                                  <a href="#" class="text-decoration-none text-danger">Forgot Password</a>
+                              </li>
+                              <li class="list-group-item bg-dark">
+                                  <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                              </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer bg-dark">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </header>
+
+    <header class="header11">
+        <img src="{% if organization and organization.logo %}{{ organization.logo.url }}{% else %}/static/images/default-profile.png{% endif %}" alt="Microsoft Logo" class="logo1">
+        <div class="header-content">
+            <h1>{{ organization.cmpname }}</h1>
+            <p>{{ organization.ccid.ccname }} · {{ organization.city }}, {{ organization.state }} · {{ follower_count }} followers · {{ organization.cmp_strength }} </p>
+            <button class="follow-button" id="followBtn">
+                {% if is_following %}Following{% else %}Follow{% endif %}
+            </button> 
+        </div>
+    </header>
+    <nav class="nav-tabs">
+        <a href="{% url 'cmphome' organization.id %}" class="tab {% if request.path == '/cmphome' %}active{% endif %}">Home</a>
+        <a href="{% url 'cmpabout' organization.id %}" class="tab {% if request.path == '/cmpabout' %}active{% endif %}">About</a>
+        <a href="{% url 'cmppost' organization.id %}" class="tab {% if request.path == '/cmppost' %}active{% endif %}">Posts</a>
+        <a href="{% url 'cmpjob' organization.id %}" class="tab {% if request.path == '/cmpjob' %}active{% endif %}active" onclick="showSection('jobs')">Jobs</a>
+    </nav>
+    <!-- Recommended Jobs -->
+
+    <div class="content1">
+    <div class="header12">
+        <h2> {{ organization.cmpname }} has <span id="job-count">{{ job_count }}</span> job opening - finding the one for you..</h2>
+        <div class="search-bar ">
+            <form method="GET" class="search-bar">
+                <input type="text" name="q" placeholder="Search by position..." value="{{ request.GET.q }}">
+                <button type="submit" class="button1">Search</button>
+            </form>
+        </div>
+    </div>
+   
+   
+    <section class="recommended-jobs">
+        <h3>Recommended jobs for you</h3>
+        <p>Based on your Profile information</p>
+        <div class="job-cards">
+            <!-- Job 1 -->
+            {% for job in jobs %}
+            <div class="job-card">
+                <a href="{% url 'cmpjob' organization.id %}" onclick="return confirm('Are you sure you want to delete this job?')"><button class="remove-job">&times;</button></a>
+                <img src="{{ job.organization.logo.url }}" alt="{{ job.organization.cmpname }} Logo" width="50" height="50">
+                <a href="{% url 'hiring_view' job.id %}" style="text-decoration: none;color: black;cursor: pointer;"><h5>{{ job.position }}</h5></a>
+                <p>{{ job.organization.cmpname }}</p>
+                <p>{{ job.city }}</p>
+                <p>{{ job.jobtype }}</p>
+                <span class="date">{{ job.applystartdate|timesince }} ago</span>
+            </div>
+            {% empty %}
+                <p>No jobs available.</p>
+            {% endfor %}
+        </div>
+    </section>
+    </div>
+    <button id="openJobForm" class="btn btn-primary jobs"><i class="fa-solid fa-plus" style="color: #fcfcfc;"></i> Add Job</button>
+<!-- Job Form Popup -->
+<div id="jobForm" class="popup-form">
+    <div class="popup-content">
+    <form id="jobFormElement">
+    {% csrf_token %}
+        <h2>Add a Job</h2>
+        <input class="form-control" type="text" id="position" name="position" placeholder="Enter Job Position" aria-label="default input example">
+
+        <input class="form-control" type="number" id="vacancy" name="vacancy" placeholder="Enter number of vacancies" aria-label="default input example">
+
+        <input class="form-control" type="text" id="qualification" name="qualification" placeholder="Enter required qualification" aria-label="default input example">
+
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group" id="experience">
+            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" name="requiredexperience">
+            <label class="btn btn-outline-primary" for="btncheck1">0+ years</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" name="requiredexperience">
+            <label class="btn btn-outline-primary" for="btncheck2">1+ years</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off" name="requiredexperience">
+            <label class="btn btn-outline-primary" for="btncheck3">2+ years</label>
+
+            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" name="requiredexperience">
+            <label class="btn btn-outline-primary" for="btncheck4">5+ years</label>
+        </div>
+
+        <div class="form-floating mt-3">
+            <textarea class="form-control" placeholder="Enter Job Description" id="desc" name="jobdescription" style="height: 100px"></textarea>
+            <label for="floatingTextarea2">Job Description</label>
+        </div>
+
+        <label for="type">Job Type : </label><br>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group" id="jobtype">
+            <input type="checkbox" class="btn-check" id="btncheck5" autocomplete="off" value="Full Time" name="jobtype">
+            <label class="btn btn-outline-danger" for="btncheck5">Full Time</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck6" autocomplete="off" value="Part Time" name="jobtype">
+            <label class="btn btn-outline-danger" for="btncheck6">Part Time</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck7" autocomplete="off" value="Internship" name="jobtype">
+            <label class="btn btn-outline-danger" for="btncheck7">Internship</label>
+
+            <input type="checkbox" class="btn-check" id="btncheck8" autocomplete="off" value="Remote" name="jobtype">
+            <label class="btn btn-outline-danger" for="btncheck8">Remote</label>
+        </div><br>
+
+        <label for="skills">Required Skills : </label><br>
+        <div class="btn-group d-flex flex-wrap gap-2 mt-2" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="skill1" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill1">Python</label>
+          
+            <input type="checkbox" class="btn-check" id="skill2" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill2">JAVA</label>
+          
+            <input type="checkbox" class="btn-check" id="skill3" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill3">Figma</label>
+
+            <input type="checkbox" class="btn-check" id="skill4" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill4">Leadership</label>
+
+            <input type="checkbox" class="btn-check" id="skill5" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill5">Financial Reporting</label>
+
+            <input type="checkbox" class="btn-check" id="skill6" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill6">Bank Reconciliation</label>
+
+            <input type="checkbox" class="btn-check" id="skill7" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill7">Taxation Knowledge (GST, TDS, etc.)</label>
+
+            <input type="checkbox" class="btn-check" id="skill8" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill8">Accounts Payable & Receivable</label>
+
+            <input type="checkbox" class="btn-check" id="skill9" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill9">General Ledger Management</label>
+
+            <input type="checkbox" class="btn-check" id="skill10" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill10">Analytical & Problem-Solving Skills</label>
+
+            <input type="checkbox" class="btn-check" id="skill11" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill11">Attention to Detail</label>
+
+            <input type="checkbox" class="btn-check" id="skill12" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill12">Statutory Compliance</label>
+
+            <input type="checkbox" class="btn-check" id="skill13" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill13">Team Collaboration</label>
+
+            <input type="checkbox" class="btn-check" id="skill14" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill14">Proficiency in MS Office (Word, Excel, PowerPoint)</label>
+
+            <input type="checkbox" class="btn-check" id="skill15" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill15">Excellent organizational and multitasking skills</label>
+
+            <input type="checkbox" class="btn-check" id="skill16" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill16">Good verbal and written communication</label>
+
+            <input type="checkbox" class="btn-check" id="skill17" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill17">Ability to coordinate across teams and stakeholders</label>
+
+            <input type="checkbox" class="btn-check" id="skill18" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill18">Scheduling and calendar management</label>
+
+            <input type="checkbox" class="btn-check" id="skill19" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill19">Documentation and record-keeping</label>
+
+            <input type="checkbox" class="btn-check" id="skill20" autocomplete="off" name="skillsrequired" value="Python">
+            <label class="btn btn-outline-warning" for="skill20">Basic knowledge of project management tools (Jira, Trello, Asana, etc.)</label>
+
+            <input type="checkbox" class="btn-check" id="skill21" name="skillsrequired" value="JavaScript" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill21">JavaScript</label>
+
+            <input type="checkbox" class="btn-check" id="skill22" name="skillsrequired" value="C#" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill22">C#</label>
+
+            <input type="checkbox" class="btn-check" id="skill23" name="skillsrequired" value="TypeScript" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill23">TypeScript</label>
+
+            <!-- Frontend -->
+            <input type="checkbox" class="btn-check" id="skill24" name="skillsrequired" value="HTML" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill24">HTML</label>
+
+            <input type="checkbox" class="btn-check" id="skill25" name="skillsrequired" value="CSS" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill25">CSS</label>
+
+            <input type="checkbox" class="btn-check" id="skill26" name="skillsrequired" value="React.js" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill26">React.js</label>
+
+            <input type="checkbox" class="btn-check" id="skill27" name="skillsrequired" value="Angular" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill27">Angular</label>
+
+            <input type="checkbox" class="btn-check" id="skill28" name="skillsrequired" value="Vue.js" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill28">Vue.js</label>
+
+            <!-- Backend -->
+            <input type="checkbox" class="btn-check" id="skill29" name="skillsrequired" value="Node.js" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill29">Node.js</label>
+
+            <input type="checkbox" class="btn-check" id="skill30" name="skillsrequired" value="Django" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill30">Django</label>
+
+            <input type="checkbox" class="btn-check" id="skill31" name="skillsrequired" value="Spring Boot" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill31">Spring Boot</label>
+
+            <input type="checkbox" class="btn-check" id="skill32" name="skillsrequired" value=".NET Core" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill32">.NET Core</label>
+
+            <!-- Databases -->
+            <input type="checkbox" class="btn-check" id="skill33" name="skillsrequired" value="MySQL" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill33">MySQL</label>
+
+            <input type="checkbox" class="btn-check" id="skill34" name="skillsrequired" value="PostgreSQL" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill34">PostgreSQL</label>
+
+            <input type="checkbox" class="btn-check" id="skill35" name="skillsrequired" value="MongoDB" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill35">MongoDB</label>
+
+            <input type="checkbox" class="btn-check" id="skill36" name="skillsrequired" value="Redis" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill136">Redis</label>
+
+            <!-- Version Control -->
+            <input type="checkbox" class="btn-check" id="skill37" name="skillsrequired" value="Git" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill37">Git</label>
+
+            <input type="checkbox" class="btn-check" id="skill38" name="skillsrequired" value="GitHub" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill38">GitHub</label>
+
+            <input type="checkbox" class="btn-check" id="skill39" name="skillsrequired" value="GitLab" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill39">GitLab</label>
+
+            <!-- API -->
+            <input type="checkbox" class="btn-check" id="skill40" name="skillsrequired" value="RESTful APIs" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill40">RESTful APIs</label>
+
+            <input type="checkbox" class="btn-check" id="skill41" name="skillsrequired" value="GraphQL" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill42">GraphQL</label>
+
+            <!-- DevOps -->
+            <input type="checkbox" class="btn-check" id="skill43" name="skillsrequired" value="Docker" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill43">Docker</label>
+
+            <input type="checkbox" class="btn-check" id="skill44" name="skillsrequired" value="Jenkins" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill44">Jenkins</label>
+
+            <input type="checkbox" class="btn-check" id="skill45" name="skillsrequired" value="Kubernetes" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill45">Kubernetes</label>
+
+            <input type="checkbox" class="btn-check" id="skill46" name="skillsrequired" value="CI/CD" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill46">CI/CD</label>
+
+            <!-- Cloud -->
+            <input type="checkbox" class="btn-check" id="skill47" name="skillsrequired" value="AWS" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill48">AWS</label>
+
+            <input type="checkbox" class="btn-check" id="skill49" name="skillsrequired" value="Azure" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill49">Azure</label>
+
+            <input type="checkbox" class="btn-check" id="skill50" name="skillsrequired" value="Google Cloud" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill50">Google Cloud</label>
+
+            <!-- Testing -->
+            <input type="checkbox" class="btn-check" id="skill51" name="skillsrequired" value="Unit Testing" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill51">Unit Testing</label>
+
+            <input type="checkbox" class="btn-check" id="skill52" name="skillsrequired" value="Jest" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill52">Jest</label>
+
+            <input type="checkbox" class="btn-check" id="skill53" name="skillsrequired" value="Selenium" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill53">Selenium</label>
+
+            <input type="checkbox" class="btn-check" id="skill54" name="skillsrequired" value="PyTest" autocomplete="off">
+            <label class="btn btn-outline-warning" for="skill54">PyTest</label>
+        </div>
+        
+        <input class="form-control" type="text" id="location" name="location" placeholder="Enter Location" aria-label="default input example">
+
+        <input class="form-control" type="text" id="salary" name="salary" placeholder="Enter Salary" aria-label="default input example">
+
+        <label for="skills">Last date to Apply : </label>
+        <input class="form-control" type="date" id="lastdate" name="lastdate" aria-label="default input example">
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="button" id="submitJob">Submit</button>
+            <button class="btn btn-danger" type="button">Close</button>
+          </div>
+    </form>
+    </div>
+</div>
+    <a herf="linkjob.html" class="tab" onclick="showSection('linkjob')"></a> 
+</body>
+<!-- <script src="{% static 'myapp/js/companypage.js' %}" defer></script>  -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    document.querySelectorAll(".job-card").forEach(card => {
+    card.addEventListener("click", function () {
+        const url = this.dataset.url;
+        if (url) window.location.href = url;
+    });
+});
+
+document.getElementById("followBtn").addEventListener("click", function () {
+    const followBtn = this;
+    const orgId = "{{ organization.id }}";  // Or from context
+
+    fetch(`/follow/${orgId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value || "",
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            if (data.status === "followed") {
+                followBtn.textContent = "Following";
+            } else if (data.status === "unfollowed") {
+                followBtn.textContent = "Follow";
+            }
+        } else {
+            alert("❌ " + data.error);
+        }
+    })
+    .catch(err => {
+        console.error("❌ Error toggling follow:", err);
+        alert("Something went wrong");
+    });
+});
+
+document.getElementById("submitJob").addEventListener("click", function () {
+    const formData = new FormData();
+
+    formData.append("position", document.getElementById("position").value);
+    formData.append("noofvacancies", document.getElementById("vacancy").value);
+    formData.append("requiredqualification", document.getElementById("qualification").value);
+    formData.append("jobdescription", document.getElementById("desc").value);
+    formData.append("location", document.getElementById("location").value);
+    formData.append("lastdate", document.getElementById("lastdate").value);
+    formData.append("salary", document.getElementById("salary").value);
+
+    // ✅ Collect all checked experiences
+    const experiences = Array.from(document.querySelectorAll('input[name="requiredexperience"]:checked'))
+        .map(el => el.nextElementSibling.textContent);
+    formData.append("requiredexperience", experiences.join(", "));
+
+    // ✅ Collect job types
+    const jobTypes = Array.from(document.querySelectorAll('input[name="jobtype"]:checked'))
+        .map(el => el.value);
+    formData.append("jobtype", jobTypes.join(", "));
+
+    // ✅ Collect skills
+    const selectedSkills = Array.from(document.querySelectorAll('input[name="skillsrequired"]:checked'))
+        .map(el => el.value);
+    formData.append("skillsrequired", selectedSkills.join(", "));
+
+    const orgId = "{{ organization.id }}";
+
+    fetch(`/addjob/${orgId}/`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]')?.value || ""
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("✅ Job posted successfully!");
+            location.reload();
+        } else {
+            alert("❌ Failed to post job: " + data.error);
+        }
+    })
+    .catch(error => {
+        console.error("Error posting job:", error);
+        alert("❌ Something went wrong. Check console for details.");
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const openBtn = document.getElementById("openJobForm");
+    const popup = document.getElementById("jobForm");
+
+    if (openBtn && popup) {
+        openBtn.addEventListener("click", function () {
+            popup.style.display = "block";
+        });
+    }
+
+    // Optional: Hide popup when clicking "Close"
+    const closeBtn = document.querySelector("#jobForm .btn-danger");
+    if (closeBtn && popup) {
+        closeBtn.addEventListener("click", function () {
+            popup.style.display = "none";
+        });
+    }
+});
+
+const csrfToken = "{{ csrf_token }}";
+    const cmpaboutUrl = "{% url 'cmphome' organization.id %}";
+    document.getElementById("followBtn").addEventListener("click", function () {
+    const orgId = "{{ organization.id }}";  // From Django context
+
+    fetch(`/follow/${orgId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]')?.value || ""
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || "Followed!");
+            document.getElementById("followBtn").textContent = "Following";
+        } else {
+            alert("❌ " + data.error);
+        }
+    })
+    .catch(err => {
+    console.error("❌ Follow error:", err);
+    alert("Something went wrong");
+});
+
+});
+  </script>
+</html>

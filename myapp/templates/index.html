@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshMinds</title>
+    <link href="/static/myapp/homepage1.css?{% now " U" %}" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><img src="/static/images/logo.png" height="40px"/></li>
+                <li><h2 class="wname">FreshMinds</h2></li >
+            </ul>
+            <div class="auth-buttons">
+                <a href="/login" class="login hire-btn">Log in</a>
+                <a href="/accounts" class="hire-btn">Sign up</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+
+        <section class="hero">
+            <h1>Hire the world's top creative talent.</h1>
+            <p>Connect with millions of top-rated designers & agencies around the world.</p>
+            <button onclick="window.location.href = '/business';">Start hiring today</button>
+        </section>
+        <section class="creatives">
+            <h2>Over 3 million ready-to-work creatives!</h2>
+             <div class="creative-cards">
+                {% for member in recent_members %}
+                <div class="creative-card">
+                    <img src="{{member.profile.url}}" alt="{{mem.firstname}}">
+                    <h3>{{member.firstname}} {{member.lastname}}</h3>
+                    <p>{{ member.position}}</p>
+                </div>
+                {% endfor %}
+
+            </div>
+        </section>
+    </main>
+    <div class="recent">
+    <h1 class="cards">Recent Jobs:</h1>
+    {% for job in recent_jobs %}
+                <div class="job-card {{job.color}}">
+                    <div class="job-header">
+                        <span class="date">{{job.applystartdate}}</span>
+                        <span class="bookmark" id="star4" onclick="myFunction4()">&#9734;</span>
+                        <!-- Placeholder for a bookmark icon -->
+                    </div>
+                    <h3>{{job.position}}</h3>
+                    <p><strong><i class="fa-brands fa-amazon" style="color: #000000;"></i>&nbsp; Amazon</strong></p>
+                    <div class="tags">
+                        <span class="tag">Part time</span>
+                        <span class="tag">Senior level</span>
+                        <span class="tag">Distant</span>
+                        <span class="tag">Project work</span>
+                    </div>
+                    <p class="price">$250/hr</p>
+                    <p class="location">San Francisco, CA</p>
+                    <a href="/login"><button class="details-btn">Details</button></a>
+                </div>
+    {% endfor %}
+    <h1 class="heading">Empowering Your Business With Recruitment Agency</h1>
+    <p class="heading">Recruitment and staffing is the agencies operate the networks.</p>
+        <!-- <div class="one_sec">
+        <div class="sub_one_sec">
+        
+        </div> -->
+    <div class="sub_one_sec">
+        <div class="video">
+        <!-- <video controls width="100%" autoplay loop muted>
+            <source src="/static/recruitment.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video> -->
+         </div>
+         <div class="num">
+            <section class="stats">
+                <div class="stat">
+                    <h2 id="stat1">0</h2>
+                    <p>Recruitment agency service provide.</p>
+                </div>
+                <div class="stat">
+                    <h2 id="stat2">0</h2>
+                    <p>We provide the best client satisfaction.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    </div>
+        <div class="trusted-by">
+            <h2>Trusted by 25k+ Companies</h2>
+        </div>
+            <div class="logos">
+            <img src="/static/images/microsoft.png">
+            <img src="/static/images/wipro.png">
+            <img src="/static/images/tcs.jpg">
+            <img src="/static/images/google.png">
+        </div>
+    
+    <section class="about">
+        <img src="/static/images/left img.jpeg" alt="Recruitment Team">
+        <div class="card-content">
+        <h2>Expert Recruitment & Easy to schedule interview</h2>
+        <p>Recruitment and staffing agency operate as the intermediaries, their all networks, expertise, and resources to hiring process.</p>
+        <ul>
+            <h3>✔ Recruitment Analysis</h3>
+            <h3>✔ Schedule interview</h3>
+            <h3>✔ Apply in trending jobs</h3>
+            <h3>✔ Reference Checks</h3>
+        </ul>
+        </div>
+    </section>
+    <script>
+                document.addEventListener("DOMContentLoaded", function() {
+            let count1 = 0;
+            let count2 = 0;
+            let target1 = 500;
+            let target2 = 250;
+            let speed = 20;
+            
+            function updateCount() {
+                if (count1 < target1) {
+                    count1 += 5;
+                    document.getElementById("stat1").innerText = count1 + "+";
+                }
+                if (count2 < target2) {
+                    count2 += 2;
+                    document.getElementById("stat2").innerText = count2 + "+";
+                }
+                if (count1 < target1 || count2 < target2) {
+                    setTimeout(updateCount, speed);
+                }
+            }
+            updateCount();
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+    // Animated Counter for Stats
+    function animateCounter(element, start, end, duration) {
+        let current = start;
+        const step = (end - start) / (duration / 10);
+        
+        function updateCounter() {
+            current += step;
+            if (current >= end) {
+                current = end;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current);
+        }
+        
+        const timer = setInterval(updateCounter, 10);
+    }
+    
+    const stats = document.querySelectorAll(".stat h2");
+    animateCounter(stats[0], 0, 500, 2000);
+    animateCounter(stats[1], 0, 250, 2000);
+
+    var elemWidth = document.getElementsByClassName('logos').offsetWidth;
+    var time = elemWidth/80;
+    document.getElementsByClassName('logos').style.cssText = "animation: scroll"+time+"s linear infinite;"
+});
+
+    </script>
+</body>
+</html>

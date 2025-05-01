@@ -1,0 +1,405 @@
+main{
+    display: flex;
+    justify-content: space-between; 
+  }
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  a button{
+    text-decoration: none;
+    color: white;
+  }
+  header {
+    background-color: black;
+    color: #fff;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .logo img {
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .nav1{
+    margin-right: 170px;
+  }
+  nav a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-profile p {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+  
+  .user-profile img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .user-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 100px;
+    margin-right: 30px;
+  }
+  
+  .div1 {
+    flex: 1;
+    margin-right: 8px;
+  }
+/*end header*/
+body{
+    margin: 0;
+    padding-bottom: 20px;
+}
+.container {
+    display: flex;
+    flex-direction: column; /* Ensure the content stacks properly */
+    width: 50%; /* Keep your desired width */
+    height: auto; /* Allow flexible height */
+    max-height: 2000vh; /* Add a maximum height */
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    overflow-y: auto; /* Adds a vertical scrollbar when needed */
+    box-shadow: 0 0 20px #cbcaca, 0 0 10px #9c9c9c;
+    box-sizing: border-box; /* Prevent padding from increasing width */
+}
+.containertop{
+    margin-top: 70px;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+    padding: 10px;
+}
+
+.profile-image img {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 40px;
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.username {
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.profile-stats {
+    margin-top: 10px;
+    display: flex;
+    gap: 25px;
+    font-size: 16px;
+}
+
+.bio {
+    margin-top: 10px;
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/*.rect{
+    border: 2px solid gray;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}*/
+.rect {
+    max-height: 400px; /* Limit the height of the posts container */
+    overflow-y: auto; /* Add a scrollbar if content overflows */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.about-title, .Experience-title, .Education-title, .Skills-title, 
+.languages-title, .activity-title, .links-title {
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+/*summary*/
+#showAboutBtn,#showExpBtn,#showEducationBtn,#showSkillsBtn,#showlanguagesBtn,#showActivityBtn,#showLinksBtn,#showSumBtn {
+    border: none;
+    background-color: white;
+    font-weight: 700;
+    font-size: 19px;
+}
+
+textarea {
+    width: 100%;
+    height: auto;
+    min-height: 100px; /* Ensure minimum height */
+    max-height: 150px; /* Limit textarea height */
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border: 2px solid gray;
+    border-radius: 10px;
+    box-sizing: border-box; /* Prevent overflow caused by padding */
+}
+
+.hidden1 {
+    display: none;
+}
+.editable1, .editable3, .editable4, .editable5, 
+.editable6, .editable7 {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 100px; /* Minimum height for content */
+    max-height: 150px; /* Add a max-height for scroll */
+    overflow-y: auto; /* Vertical scrollbar if content exceeds */
+    cursor: pointer;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+.hidden3,.hidden4,.hidden5,.hidden6,.hidden7 
+{
+    display: none;
+}
+.post{
+    border: none;
+    background-color: #d4d4d4;
+    border-radius: 17px;
+    font-weight: 500;
+}
+.post1{
+    border: none;
+    background-color: white;
+    border-radius: 17px;
+    font-weight: 500;
+    margin-left: 85%;
+}
+/*post pop-up*/
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+    justify-content: center; /* Align content to the center */
+    align-items: center;
+}
+
+.modal-content1 {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 500px;
+    position: relative;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid gray;
+    border-radius: 10px;
+    margin-top: 10px;
+    resize: none;
+}
+
+.submit-post {
+    background-color: #0962c7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.submit-post:hover {
+    background-color: #0962c7;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Media Preview */
+#mediaPreview {
+    margin-top: 15px;
+}
+
+#mediaPreview img, #mediaPreview video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.media-upload {
+    margin-top: 20px;
+}
+
+input[type="file"] {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+/*display post*/
+/* Styling for posts container */
+/* Container for posts */
+#postsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 20px; /* Space between items */
+    margin-top: 20px;
+}
+
+/* Each post item styling */
+.post-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-left: 20px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect */
+.post-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Media preview styling */
+.post-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Caption styling */
+.post-header {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+    text-align: left;
+    word-wrap: break-word; /* Prevent overflow */
+}
+@media (max-width: 768px) {
+    #postsContainer {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #postsContainer {
+        grid-template-columns: 1fr; /* 1 column for very small screens */
+    }
+}
+/*new*/
+/* Post Container */
+.posts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Post Card */
+.post-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures no content overflows */
+    width: 320px; /* Set fixed width */
+    text-align: center;
+    padding: 10px;
+}
+
+/* Post Image */
+.post-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+
+/* Post Header (Username) */
+.post-header {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+}
+
+/* Post Content */
+.post-content {
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* No Posts Message */
+.no-posts {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+}

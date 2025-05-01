@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!--font awesome-->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Applied Jobs</title>
+    <style>
+        /*header*/
+        main {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a button {
+            text-decoration: none;
+            color: white;
+        }
+
+        header {
+            background-color: black;
+            color: #fff;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo img {
+            width: 40px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        nav a {
+            margin-left: 30px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile p {
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+
+        .user-profile img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .user-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 100px;
+            margin-right: 30px;
+        }
+
+        .div1 {
+            flex: 1;
+            margin-right: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .tab {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .job-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .job-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-btn {
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            border: none;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+
+        .page-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .nav1{
+            margin-right: 170px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">
+                FreshMinds
+            </div>
+            <nav class="nav1">
+                <a href="/homepage">Home</a>
+                <a href="/job_card">Find job</a>
+                <a href="/applied_jobs">Applied Jobs</a>
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal"
+                    data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+
+            </div>
+        </div>
+        </div>
+    </header>
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark">
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="#" class="text-decoration-none text-light">Edit Profile</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="#" class="text-decoration-none text-light">Create CV</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/changepassword" class="text-decoration-none text-danger">Change Password</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/forgetpassword" class="text-decoration-none text-danger">Forgot Password</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="filterJobs('applied')">Applied</button>
+        </div>
+        <br>
+        <!-- <ul class="job-list" id="jobList"></ul>
+        <div class="pagination" id="pagination"></div> -->
+        
+        <div class="job-item">
+        <div>
+            <!-- <strong>{{ app.job.title }}</strong> at <strong>{{ app.job.organization.cmpname }}</strong><br>
+            <small>{{ app.job.location }}</small><br>
+            <span>Status: {{ app.status }}</span><br>
+            <span>Applied on: {{ app.applydate }}</span> -->
+            <table class="table">
+                <thead class="table-secondary table table-striped" style="width: 100%;">
+                  <tr>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Applied Date</th>
+                  </tr>
+                </thead>
+                {% for app in applications %}
+                <tbody>
+                  <tr>
+                    <th scope="row">{{ app.job.organization.cmpname }}</th>
+                    <td>{{ app.job.position }}</td>
+                    <td>{{ app.job.city }}</td>
+                    <td>{{ app.status }}ed</td>
+                    <td>{{ app.applydate }}</td>
+                  </tr>
+                </tbody>
+                {% empty %}
+                    <p>You haven’t applied to any jobs yet.</p>
+                {% endfor %}
+              </table>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        const jobs = [
+            { title: "Website Designer & SEO", company: "hotsourced", location: "India (Remote)", status: "applied" },
+            { title: "Web Designer", company: "Tata Consultancy Services", location: "Ahmedabad (On-site)", status: "applied" },
+            { title: "Web Development Intern", company: "Muses Consulting Studio", location: "India (Remote)", status: "applied" },
+            { title: "HTML Developer Work From Home", company: "Busibud Solutions", location: "India (Remote)", status: "applied" },
+            { title: "Shopify Developer | HTML, CSS, JavaScript", company: "BirdChime", location: "India (Remote)", status: "applied" },
+            { title: "Web Designer", company: "Acceron", location: "India (Remote)", status: "applied" },
+            { title: "Frontend Architect and Developer", company: "Drillo.AI", location: "Ahmedabad (On-site)", status: "applied" },
+            { title: "HTML Developer", company: "Codal", location: "Ahmedabad (On-site)", status: "applied" },
+            { title: "HTML Developer", company: "FunEx", location: "India (Remote)", status: "applied" }
+        ];
+
+        let currentPage = 1;
+        const jobsPerPage = 4;
+
+        function displayJobs() {
+            const jobList = document.getElementById("jobList");
+            jobList.innerHTML = "";
+
+            const start = (currentPage - 1) * jobsPerPage;
+            const end = start + jobsPerPage;
+            const paginatedJobs = jobs.slice(start, end);
+
+            paginatedJobs.forEach(job => {
+                const jobItem = document.createElement("li");
+                jobItem.classList.add("job-item");
+                jobItem.innerHTML = `<strong>${job.title}</strong> at ${job.company} <br> <small>${job.location}</small>`;
+                jobList.appendChild(jobItem);
+            });
+            setupPagination();
+        }
+
+        function setupPagination() {
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            const pageCount = Math.ceil(jobs.length / jobsPerPage);
+
+            for (let i = 1; i <= pageCount; i++) {
+                const btn = document.createElement("button");
+                btn.classList.add("page-btn");
+                if (i === currentPage) btn.classList.add("active");
+                btn.innerText = i;
+                btn.onclick = function () {
+                    currentPage = i;
+                    displayJobs();
+                };
+                pagination.appendChild(btn);
+            }
+        }
+
+        displayJobs();
+    </script>
+<!--Bootstrap Js link-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

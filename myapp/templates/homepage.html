@@ -1,0 +1,327 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/static/myapp/homepage.css?{% now " U" %}" rel="stylesheet">
+  <title>Document</title>
+  <!--font awesome cdn-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/static/images/logo.jpg" alt="Logo">
+            FreshMinds
+        </div>
+        <nav class="nav1">
+            {% if request.session.user_type == "jobseeker" %}
+                <a href="/homepage">Home</a>
+                <a href="/job_card">Find job</a>
+                <a href="/applied_jobs">Applied Jobs</a>
+            {% endif %}
+            {% if request.session.user_type == "business" %}
+                <a href="/homepage">Home</a>
+                <a href="#">Hiring</a>
+                <a href="#">Notification</a>
+                {% if organization %}
+                    <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+                {% else %}
+                    <a href="#" onclick="alert('Organization data not loaded')">Post Job</a>
+                {% endif %}
+            {% endif %}
+            {% if request.session.user_type == "agency" %}
+                <a href="/homepage">Home</a>
+                <a href="#">Hiring</a>
+                <a href="#">Notification</a>
+                {% if organization %}
+                    <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+                {% else %}
+                    <a href="#" onclick="alert('Organization data not loaded')">Post Job</a>
+                {% endif %}
+            {% endif %}
+        </nav>
+        <div class="user-profile">
+            <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal"
+                data-bs-target="#settingsModal">
+                <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+            </button>
+        </div>
+    </div>
+</header>
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-dark">
+                <ul class="list-group bg-dark">
+                    <li class="list-group-item bg-dark">
+                        <a href="/cv" class="text-decoration-none text-light">Create CV</a>
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <a href="/changepassword" class="text-decoration-none text-danger">Change Password</a>
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <a href="/forgetpassword" class="text-decoration-none text-danger">Forgot Password</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer bg-dark">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <div id="root"></div>
+  <div class="sidebar">
+    <div class="filter-section">
+        <div class="profile-section">
+            {% if request.session.user_type == "business" and organization %}
+                <a href="{% url 'cmphome' organization.id %}">
+                    <img src="{{ current_user_pic |default:'/static/images/default-user.png' }}" class="pro">
+                </a>
+            
+            {% elif request.session.user_type == "jobseeker" and member %}
+                <a href="{% url 'member_profile' member.id %}">
+                    <img src="{{ current_user_pic |default:'/static/images/default-user.png' }}" class="pro">
+                </a>
+            
+            {% elif request.session.user_type == "agency" and agency %}
+                <a href="{% url 'public_agency_profile' agency.id %}">
+                    <img src="{{ current_user_pic |default:'/static/images/default-user.png' }}" class="pro">
+                </a>
+            
+            {% else %}
+                <img src="{{ current_user_pic|default:'/static/images/default-user.png' }}" class="pro">
+            {% endif %}
+        
+            {% if current_user_email %}
+                <p>{{ current_user_email }}</p>
+            {% endif %}
+        </div>        
+        <hr>
+        <h3>Filters</h3>
+        <div class="filter-group">
+            <h4>Working Schedule</h4>
+            <label><input type="checkbox" name="full-time"> Full Time</label><br>
+            <label><input type="checkbox" name="part-time"> Part Time</label><br>
+            <label><input type="checkbox" name="internship"> Internship</label>
+        </div>
+    </div>
+  </div>
+  <div class="body1 div1">
+    <h2>Feeds</h2>
+    {% for post in posts %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{{ post.profile_pic }}" class="img1">
+            <!-- <p class="prg1"><a href="{{ post.profile_url }}" style="text-decoration: none;color: #000000;">{{ post.user_email }}</a></p> -->
+            <a class="prg1" href="{% url 'user_profile' post.login_id %}">{{ post.user_email }}</a>
+        </div>       
+        <div class="card-body">
+            <div class="description">
+                <p>{{ post.postdesc }}</p>
+            </div>
+            {% if post.postcontent_url %}
+            <div class="postimg" onclick="openPopup('popup{{ forloop.counter }}')">
+                <img src="{{ post.postcontent_url }}" class="imgs1">  <!-- Show post content -->
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+<!-- Popup for each post -->
+<div class="popup" id="popup{{ forloop.counter }}">
+  <div class="popup-content">
+      <span class="close-btn" onclick="closePopup('popup{{ forloop.counter }}')">&times;</span>
+      <div class="image-section">
+          <img id="slideImage" src="{{ post.postcontent_url }}" alt="Image">
+          <div class="nav-buttons">
+            <h2><i class="fa-heart heart-icon {% if post.is_liked %}fa-solid text-danger{% else %}fa-regular{% endif %}" data-post-id="{{ post.id }}"></i></h2>
+            <span class="like-count" id="like-count-{{ post.id }}">{{ post.likes_count }}</span>
+        </div>        
+      </div>
+      <div class="text-section">
+          <p class="paragraph1">{{ post.postdesc }}</p>   
+        <div class="comments">
+            {% for comment in post.comments %}
+                <p><strong>{{ comment.login.stremail }}</strong>: {{ comment.comments }}</p>
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+        </div>          
+          <div class="comment-input">
+            <textarea rows="2" placeholder="Add a comment..." id="commentInput{{ post.id }}"></textarea>
+            <button class="addCommentBtn" data-postid="{{ post.id }}">Add</button>
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+        </div>
+      </div>                        
+  </div>
+</div>
+{% endfor %}
+
+
+
+</div>
+  <div class="right div1">
+    <form method="get" action="{% url 'homepage' %}">
+        <input type="text" id="search2" class="search2" placeholder="Search..." name="q" value="{{ query }}">
+        <button type="submit" class="src1"><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></button>
+    </form>    
+    {% if search_error %}
+        <p style="color: red;">{{ search_error }}</p>
+    {% endif %}
+    <!-- <button class="src1" onclick="searchUser()"><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></button> -->
+    <hr class="hr1">
+    <h3 class="Suggested">Suggested for you</h3>
+    <div class="sugs" id="userList">
+        {% for m in all_members %}
+            <p class="user"><img src="{{ m.profile.url }}" class="propic"> &nbsp;{{ m.firstname }} {{ m.lastname }}</p>
+        {% endfor %}
+        {% for org in all_organizations %}
+            <p class="user"><img src="{{ org.logo.url }}" class="propic" onerror="this.src='/static/images/default-user.png';"> &nbsp;{{ org.cmpname }}</p>
+        {% endfor %}
+        {% for arg in all_agency %}
+            <p class="user"><img src="{{ arg.logo.url }}" class="propic" onerror="this.src='/static/images/default-user.png';">&nbsp; {{ arg.agency_name }}</p>
+        {% endfor %}
+    </div>
+  </div>
+</body>
+<script src="{% static 'myapp/js/homepage.js' %}" defer></script>
+  <!--bootstrap js-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    function openPopup(popupId) {
+    document.getElementById(popupId).style.display = "flex";
+    document.querySelector(".overlay").style.display = "block"; // Show overlay
+}
+
+function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
+    document.querySelector(".overlay").style.display = "none"; // Hide overlay
+}
+
+function getCSRFToken() {
+    let csrfInput = document.querySelector("input[name=csrfmiddlewaretoken]");
+    return csrfInput ? csrfInput.value : null;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".addCommentBtn").forEach(button => {
+        button.addEventListener("click", function () {
+            let postId = this.getAttribute("data-postid");
+            let commentText = document.getElementById("commentInput" + postId).value.trim();
+
+            if (commentText) {
+                fetch("/comment/" + postId + "/", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCSRFToken(),
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        comment: commentText
+                    }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Comment added!");
+                        location.reload();  // or append comment without reload
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                });
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".heart-icon").forEach(icon => {
+        icon.addEventListener("click", function () {
+            const postId = this.dataset.postId;
+            const likeCountSpan = document.getElementById("like-count-" + postId);
+            const iconElement = this;
+
+            fetch(`/toggle_like_member/${postId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector("input[name=csrfmiddlewaretoken]").value,
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    iconElement.classList.remove("fa-regular", "fa-solid", "text-danger");
+                    if (data.liked) {
+                        iconElement.classList.add("fa-solid", "text-danger");
+                    } else {
+                        iconElement.classList.add("fa-regular");
+                    }
+                    likeCountSpan.textContent = data.like_count;
+                } else {
+                    alert("❌ " + data.error);
+                }
+            })
+            .catch(err => {
+                console.error("Error toggling like:", err);
+            });
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".addCommentBtn").forEach(button => {
+        button.addEventListener("click", function () {
+            let postId = this.getAttribute("data-postid");
+            let commentBox = document.getElementById("commentInput" + postId);
+            let commentText = commentBox.value.trim();
+
+            if (commentText) {
+                fetch(`/comment_member/${postId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value,
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({
+                        comment: commentText
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Append comment to UI
+                        const commentsDiv = commentBox.closest(".popup").querySelector(".comments");
+                        const p = document.createElement("p");
+                        p.innerHTML = `<strong>${data.username}</strong>: ${data.comment}`;
+                        commentsDiv.appendChild(p);
+                        commentBox.value = "";
+                    } else {
+                        alert("Failed to comment: " + data.error);
+                    }
+                })
+                .catch(err => console.error("Error submitting comment:", err));
+            }
+        });
+    });
+});
+
+
+  </script>
+</html>

@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="/static/myapp/hiring.css?{% now " U" %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <!-- Font Code-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">
+                FreshMinds
+            </div>
+            <nav class="nav1">
+                <a href="/homepage">Home</a>
+                <a href="{{ org_job_list_url }}">Hiring</a>
+                <a href="{% url 'cmpjob' job.organization.id %}">Post Job</a>
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ✅ Modal moved outside the header for safety -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark">
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="/changepassword" class="text-decoration-none text-danger">Change Password</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/forgetpassword" class="text-decoration-none text-danger">Forgot Password</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+  <div class="main-content">
+
+    <h1>{{ job.position }}</h1>
+    <div class="breadcrumb">{{ job.city }}, India &nbsp; &#9679; &nbsp; {{ job.jobtype }} &nbsp; &#9679; &nbsp; <span>Applied</span></div>
+    <div class="actions">
+      <!-- Edit Pencil Button -->
+    </div>
+  </div>
+  <div class="button-group">
+    <button class="tab-button {% if tab == 'all' %}active{% endif %}" id="all-applied">All Applied</button>
+  </div>
+
+  <!-- Applicant Card 1 -->
+  {% if applications %}
+  <h2>All Applicants</h2>
+    {% for application in applications %}
+    <div class="applicant-card" id="applicant-1">
+      <div class="profile">
+        <img src="{{ application.member.profile.url }}" alt="Profile Picture">
+        <div>
+          <h3 class="editable" contenteditable="false">{{ application.member.firstname }} {{ application.member.lastname}}</h3>
+          <p class="editable" contenteditable="false">Applied on: {{ application.applydate }}</p>
+          <!-- <p class="editable" contenteditable="false">Location: {{ application.member.city.cityname }} {{application.member.city.state.statename }}</p> -->
+          <p class="editable" contenteditable="false">Location: {{ job.city.cityname }}, {{ job.city.state.sname }}</p>
+          <a href="{% url 'user_profile' application.member.login.id %}">View Profile</a>&nbsp;&nbsp;
+          <a href="{{ application.attachment.url }}">View CV</a>
+      </div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="applicationid" value="{{application.id}}" />
+      <div class="row">
+        <div class="col-6">
+          <select class="form-select" name="status">
+            <option value="Reject">Reject</option>
+            <option value="ShortList">Short List</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <button type="submit" class="btn">Change</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
+  {% else %}
+  <p>No applications yet.</p>
+  {% endif %}
+
+
+
+
+
+
+
+  <!-- Draft Applicants Section -->
+  {% if shortlistapplications %}
+  <div class="draft-applicants-container" id="draft-applicants">
+    <h2>Shortlisted Applicants</h2>
+  {% for application in shortlistapplications %}
+    <div class="applicant-card" id="applicant-1">
+      <div class="profile">
+        <img src="{{application.member.profile.url}}" alt="Profile Picture">
+        <div>
+          <h3 class="editable" contenteditable="false">{{ application.member.firstname }} {{ application.member.lastname}}</h3>
+          <p class="editable" contenteditable="false">Applied on: {{ application.applydate }}</p>
+          <p class="editable" contenteditable="false">Location: {{ application.member.city.cityname }} {{application.member.city.state.sname }}</p>
+        </div>
+        <a href="viewcv?memberid={{application.member.id}}">View CV</a> 
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="applicationid" value="{{application.id}}" />
+        <div class="row">
+          <div class="col-6">
+            <select class="form-select" name="status">
+              <option value="Reject">Reject</option>
+              <option value="ShortList">Short List</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <button type="submit" class="btn">Change</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% endfor %}
+    {% else %}
+      <p>No shortlisted applicants.</p>
+    {% endif %}
+  </div>
+  
+<!-- Draft Applicants Section -->
+{% if rejectedapplications %}
+<div class="draft-applicants-container" id="draft-applicants">
+  <h2>Rejected Applicants</h2>
+  {% for application in rejectedapplications %}
+  <div class="applicant-card" id="applicant-1">
+    <div class="profile">
+      <img src="{{application.member.profile.url}}" alt="Profile Picture">
+      <div>
+        <h3 class="editable" contenteditable="false">{{ application.member.firstname }} {{ application.member.lastname}}</h3>
+        <p class="editable" contenteditable="false">Applied on: {{ application.applydate }}</p>
+        <p class="editable" contenteditable="false">Location: {{ job.city.cityname }}, {{ job.city.state.sname }}</p>
+      </div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="applicationid" value="{{application.id}}" />
+      <div class="row">
+        <div class="col-6">
+          <select class="form-select" name="status">
+            <option value="Reject">Reject</option>
+            <option value="ShortList">Short List</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <button type="submit" class="btn">Change</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
+{% else %}
+  <p>No rejected applicants.</p>
+{% endif %}
+</div>
+</body>
+
+<script src="{% static 'myapp/js/hiring.js' %}" defer></script>
+<script src="{% static 'myapp/js/firstpage.js' %}" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</html>

@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="{% static 'myapp/see_all_posts.css' %}?{% now "U" %}" rel="stylesheet">
+</head>
+<body>
+    <div class="containers">
+        <h1>Your Posts</h1>
+        <div id="postsContainer" class="crdcontainer row">
+            <!-- Dynamically Loop Through Posts -->
+            {% for post in posts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-text">{{ post.posttitle }}</h5>
+                        </div>
+                        {% if post.postcontent %}
+                            <img src="{{ post.postcontent.url }}" alt="Post Image" class="open-modal" data-modal="modal{{ post.id }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="card-text">{{ post.postdesc }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popup (Modal) for Each Post -->
+                <div id="modal{{ post.id }}" class="modal">
+                    <div class="modal-content">
+                        <div class="container">
+                            <div class="left">
+                                <span class="close" data-modal="modal{{ post.id }}">&times;</span>
+                                <h5 class="card-text1">{{ post.posttitle }}</h5>
+                                <hr>
+                                <div class="image-section">
+                                    {% if post.postcontent %}
+                                        <img src="{{ post.postcontent.url }}" alt="Post Image">
+                                    {% endif %}
+                                </div>
+                                <div class="like-section">
+                                    <button class="likeBtn">
+                                        <i class="fa-regular fa-heart"></i> Like (<span class="likeCount">0</span>)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <div class="caption">{{ post.postdesc }}</div>
+                                <hr>
+                                <div class="comments">
+                                    <!-- Comments will be dynamically appended here -->
+                                </div>
+                                <div class="comment-input">
+                                    <textarea rows="2" placeholder="Add a comment..."></textarea>
+                                    <button class="addCommentBtn">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="footer">
+            <a href="/profile"><button class="backBtn">Go Back</button></a>
+        </div>
+    </div>
+
+    <script src="{% static 'myapp/js/see_all_posts.js' %}" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Open modal when image is clicked
+            document.querySelectorAll(".open-modal").forEach(item => {
+                item.addEventListener("click", function () {
+                    let modalId = this.getAttribute("data-modal");
+                    document.getElementById(modalId).style.display = "block";
+                });
+            });
+
+            // Close modal when 'x' is clicked
+            document.querySelectorAll(".close").forEach(item => {
+                item.addEventListener("click", function () {
+                    let modalId = this.getAttribute("data-modal");
+                    document.getElementById(modalId).style.display = "none";
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Microsoft LinkedIn Page Clone</title>
+    <link href="/static/myapp/companypage.css?{% now " U" %}" rel="stylesheet">
+</head>
+<body>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    <header class="header1">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">
+                FreshMinds
+            </div>
+            <nav class="nav1">
+                <a href="/homepage">Home</a>
+                <a href="/hiring">Hiring</a>
+                <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+                <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header bg-dark">
+                          <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body bg-dark">
+                          <ul class="list-group bg-dark">
+                            <li class="list-group-item bg-dark">
+                              <a href="#" class="text-decoration-none text-danger">Change Password</a>
+                            </li>
+                            <li class="list-group-item bg-dark">
+                                <a href="#" class="text-decoration-none text-danger">Forgot Password</a>
+                            </li>
+                            <li class="list-group-item bg-dark">
+                                <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="modal-footer bg-dark">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Header Section -->
+    <header class="header2">
+        <img src="{% if organization and organization.logo %}{{ organization.logo.url }}{% else %}/static/images/default-profile.png{% endif %}" alt="Microsoft Logo" class="logo1">
+        <div class="header-content">
+            <h1>{{ organization.cmpname }}</h1>
+            <p>{{ organization.ccid.ccname }} · {{organization.city}}, {{ organization.state }} · {{ follower_count }} followers · {{organization.cmp_strength}} </p>    
+            <!-- <button class="follow-button" id="followBtn">Follow</button>    -->
+            <button class="follow-button" id="followBtn">
+                {% if is_following %}
+                  Following
+                {% else %}
+                  Follow
+                {% endif %}
+              </button>                            
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <a href="{% url 'cmphome' organization.id %}" class="tab active" onclick="showSection('home')">Home</a>
+        <a href="{% url 'cmpabout' organization.id %}" class="tab" onclick="showSection('about')">About</a>
+        <a href="{% url 'cmppost' organization.id %}" class="tab" onclick="showSection('posts')">Posts</a>
+        <a href="{% url 'cmpjob' organization.id %}" class="tab" onclick="showSection('jobs')">Jobs</a>
+    </nav>
+
+    <!-- Content Sections -->
+    <section id="home" class="content-section active">
+        <h2>Welcome to {{ organization.cmpname }}</h2>
+        <button type="button" class="btn btn-primary b1" data-bs-toggle="modal" data-bs-target="#exampleModal">Add More Infomation</button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog custom-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">information</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateOrganizationForm" method="POST" action="{% url 'cmphome' org_id=organization.id %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="companyIntroduction" class="form-label">Company Introduction</label>
+                                <textarea class="form-control" id="companyIntroduction" name="companyIntroduction" rows="3" placeholder="Enter company introduction..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyOverview" class="form-label">Overview</label>
+                                <textarea class="form-control" id="companyOverview" name="companyOverview" rows="3" placeholder="Enter company overview..."></textarea>
+                            </div>                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="saveChangesBtn" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>{{organization.intro}}</p>
+        
+        <!-- Overview Card -->
+        <div class="overview-card">
+            <h3>Overview</h3>
+            <p>{{organization.overview}}</p>
+            <div class="overview-details">
+                <div class="info-box">
+                    <strong>Contact info</strong><br>
+                    <p>Email :- <a href="#" target="_blank">{{ organization.stremail }}</a></p>
+                    <p>Contact Number :- {{ organization.strmobileno }}</p>
+                </div>
+        </div>
+    </section>
+
+    <section id="about" class="content-section">
+        <h2>About Microsoft</h2>
+        <p>Microsoft is a global technology company based in Redmond, Washington, focused on software, services, devices, and solutions.</p>
+    </section>
+
+    <section id="posts" class="content-section">
+        <h2>Posts</h2>
+        <p>Curious about the newest AI features designed to support you at work and beyond? October's edition of The Monthly Tech-In has got you covered.</p>
+    </section>
+
+    <section id="jobs" class="content-section">
+        <h2>Jobs</h2>
+        <p>Explore job opportunities and career paths at Microsoft.</p>
+    </section>
+
+    <section id="home" class="content-section active">
+        <h2>Welcome to {{ organization.cmpname }}</h2>
+        <p>{{organization.intro}}</p>
+        <div class="page-posts-card" >
+            <h3>Page posts</h3>
+            <div class="post-cards">
+                {% for post in posts %}
+                <div class="post-card">
+                    <div class="post-header">
+                        <img src="{{ organization.logo.url }}" alt="{{ organization.cmpname }} Logo" class="post-logo">
+                    <div>
+                    <p class="cmp1">{{ organization.cmpname }}</p>
+                    <span>{{ follower_count }} followers · 2.5K ago</span>
+                </div>
+            </div>
+            <hr>
+            <p>{{ post.posttitle }}</p>
+            {% if post.postcontent %}
+                <img src="{{ post.postcontent.url }}" alt="Post Image" class="post-image">
+            {% endif %}
+            <p>{{ post.postdesc }}</p>
+        </div>
+        {% empty %}
+        <p>No posts available.</p>
+        {% endfor %}
+            </div>
+        </div>
+    </section>
+    
+    <div class="recent-jobs-card">
+        <h3>Recent job openings</h3>
+        {% if jobs %}
+        {% for job in jobs %}
+        <div class="job-opening">
+            <img src="{{ organization.logo.url }}" alt="Microsoft Logo" class="job-logo">
+            <div>
+                <p class="cmp1">{{ job.position }} <span class="verified-icon"><i class="fa-solid fa-check" style="color: #05c502;"></i></span></p>
+                <p><i class="fa-solid fa-location-dot" style="color: #ef0b0b;"></i> {{job.city }}</p>
+            </div>
+        </div>
+        {% endfor %}
+            {% else %}
+                <p>No job openings yet.</p>
+        {% endif %}
+        <a href="{% url 'cmpjob' organization.id %}"><button class="btn btn-primary">Show all jobs</button></a>
+    </div>
+</body>
+<!-- <script src="{% static 'myapp/js/companypage.js' %}" defer></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+document.querySelector("#saveChangesBtn").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent default behavior
+
+    let form = document.querySelector("#updateOrganizationForm");
+    let formData = new FormData(form);
+
+    fetch("{% url 'cmphome' org_id=organization.id %}", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        }
+    })
+    .then(response => response.json()) // Ensure response is JSON
+    .then(data => {
+        if (data.success) {
+            alert("Company information updated successfully!");
+            location.reload(); // Reload page to see changes
+        } else {
+            alert("Error updating information: " + (data.message || "Unknown error"));
+        }
+    })
+    .catch(error => {
+        console.error("Fetch error:", error);
+        // alert("Failed to update company information.");
+    });
+});
+
+document.getElementById("followBtn").addEventListener("click", function () {
+    const orgId = "{{ organization.id }}";  // From Django context
+
+    fetch(`/follow/${orgId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]')?.value || ""
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || "Followed!");
+            document.getElementById("followBtn").textContent = "Following";
+        } else {
+            alert("❌ " + data.error);
+        }
+    })
+    .catch(err => {
+    console.error("❌ Follow error:", err);
+    alert("Something went wrong");
+});
+
+});
+</script>
+</html>

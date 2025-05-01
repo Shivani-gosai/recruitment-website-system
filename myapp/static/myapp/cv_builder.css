@@ -1,0 +1,400 @@
+/*header*/
+main{
+    display: flex;
+    justify-content: space-between; 
+  }
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  a button{
+    text-decoration: none;
+    color: white;
+  }
+  header {
+    background-color: black;
+    color: #fff;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .logo img {
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  nav a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-profile p {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+  
+  .user-profile img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .user-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 100px;
+    margin-right: 30px;
+  }
+  
+  .div1 {
+    flex: 1;
+    margin-right: 8px;
+  }
+
+/*end header*/
+
+body {
+    font-family: 'Dubai';
+    background-color: #f4f4f9;
+    color: #333;
+}
+.container {
+    background-color: #ecebeb;
+    padding: 8px;
+    margin-top: 120px;
+    border-radius: 10px;
+}
+.name {
+    text-align: center;
+}
+.position {
+    text-align: center;
+    opacity: 0.7;
+}
+.contact-info {
+    text-align: center;
+}
+.identity {
+    display: inline;
+    margin: 0 5px; /* Adds space between elements */
+}
+
+/* Summary Button */
+#showSummaryBtn,#showExperienceBtn,#showEducationBtn,#showSkillsBtn,#showLinksBtn,#showLanguageBtn {
+    border: none;
+    background-color: #ecebeb;
+    font-weight: 700;
+    font-size: 19px;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+
+.editable,.editable1,.editable2 {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 10px; /* Adds space between button and editable text */
+}
+
+.hidden,.hidden1,.hidden2 {
+    display: none;
+}
+
+/*experience*/
+.experience-section { margin-bottom: 1em; }
+
+.pos{
+    color: #0962c7;
+    font-weight: 500;
+    font-size: 18px;
+    padding-left: 5px;
+}
+.present{
+    padding-left: 5px;
+}
+/*add experience*/
+.add {
+    border: 3px solid #0962c7;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 8px;
+    font-weight: 600;
+}
+.add i{
+    margin-right: 10px;
+}
+
+.title-input{
+    background-color: #ecebeb;
+    border: none;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+/* Skills Section */
+#skillsContainer {
+    margin-top: 20px;
+}
+.skill-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.skill-name {
+    font-weight: 500;
+    font-size: 16px;
+    border: none;
+    background-color: #ecebeb;
+}
+.skill-rating {
+    display: flex;
+    gap: 4px;
+}
+.skill-rating i {
+    color: #ccc; /* Default star color */
+    cursor: pointer;
+}
+.skill-rating .active {
+    color: #ffd700; /* Active star color */
+}
+
+/* Links Section */
+#linksContainer {
+    margin-top: 20px;
+}
+.link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.link-name {
+    flex: 1;
+    margin-right: 10px;
+    border: none;
+    background-color: #ecebeb;
+}
+.link-url {
+    flex: 2;
+    margin-right: 10px;
+    border: none;
+    background-color: #e1e1e1;
+}
+.link-remove {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+/*save button code*/
+.save{
+    margin-top: 35px;
+    margin-bottom: 15px;
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    background-color: #0962c7;
+    color: white;
+    border: 2px solid #0962c7;
+    border-radius: 20px;
+    font-weight: 500;
+}
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+}
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Section */
+#profileName, #profilePosition, #profileContact {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    color: #444;
+}
+
+#editProfileBtn, #saveProfileBtn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    background-color: #c5dedd;
+    color: #333;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#editProfileBtn:hover, #saveProfileBtn:hover {
+    background-color: #a5c3bf;
+}
+
+#saveProfileBtn {
+    display: none;
+}
+
+/* Experience, Education, Skills, Links, Language Sections */
+.experience-section, .education-section, .skill-item, .link-item, .language-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-top: 12px;
+    background-color: #f2e9e4;
+}
+
+.title-input, .skill-name, .link-name, .link-url {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.editable1, .editable2 {
+    border: 2px solid #bbb;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #ffffff;
+    transition: 0.3s;
+}
+
+.editable1:hover, .editable2:hover {
+    background-color: #eae0d5;
+}
+
+.hidden1, .hidden2 {
+    display: none;
+}
+
+/* Buttons */
+.remove-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    background-color: #f4a261;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.remove-btn:hover {
+    background-color: #e76f51;
+}
+
+.add {
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    font-weight: bold;
+    background-color: #c5dedd;
+    color: #333;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add:hover {
+    background-color: #a5c3bf;
+}
+.form-container {
+    display: none; /* Hide all forms by default */
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 50%;
+}
+.nav1{
+    margin-right: 170px;
+}
+/* Custom styling */
+.form-container {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    width: 60%;
+    border-radius: 5px;
+}
+.btn-group {
+    margin-top: 20px;
+}
+.btn-group button {
+    margin-right: 10px;
+}
+.entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+.delete-btn {
+    color: red;
+    cursor: pointer;
+}

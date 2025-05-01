@@ -1,0 +1,245 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- Include jQuery (Make sure this is included before your custom script) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="/static/myapp/new_profile.css?{% now " U" %}" rel="stylesheet">
+    <!--Font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">
+                FreshMinds
+            </div>
+            <nav class="nav1">
+                {% if request.session.user_type == "jobseeker" %}
+                    <a href="/homepage">Home</a>
+                    <a href="/job_card">Find job</a>
+                    <a href="/applied_jobs">Applied Jobs</a>
+                {% endif %}
+                {% if request.session.user_type == "business" or request.session.user_type == "agency" %}
+                <a href="/homepage">Home</a>
+                <a href="#">Hiring</a>
+                <a href="#">Notification</a>
+                {% if organization %}
+                    <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+                {% endif %}
+                {% endif %}
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal"
+                        data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+            </div>            
+        </div>
+    </header>
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark">
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="/cv" class="text-decoration-none text-light">Create CV</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="{% url 'logout' %}" class="text-decoration-none text-danger">Log Out</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/changepassword" class="text-decoration-none text-danger">Change Password</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/forgetpassword" class="text-decoration-none text-danger">Forgot Password</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container containertop">
+        <!-- <div class="bgimg">
+            <img src="https://images.pexels.com/photos/4439410/pexels-photo-4439410.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+        </div> -->
+        <div class="profile-header">
+            <div class="profile-image">
+                <img src="{{ member.profile.url }}" alt="Profile Picture">
+            </div>
+            <div class="profile-details">
+                <div class="profile-top">
+                    <h2 class="username">{{ member.firstname }} {{ member.lastname }}</h2>
+                </div>
+                <div class="profile-stats">
+                    <span><strong>{{ posts|length }}</strong> posts</span>
+                </div>
+                <div class="bio">
+                    <p>{{ member.position.positionname }} | {{ member.address }}</p>
+                    <p>{{ member.eemail }}</p>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="container Summary">
+        <div class="Summary-title">
+            <label id="showSumBtn">Summary</label>
+            <div>
+                <ul>
+                    {% if summary %}
+                        <li>{{ summary.summary }}</li>  
+                    {% else %}
+                        <li>No summary listed.</li>
+                    {% endif %}
+                </ul>
+            </div>                       
+            <!-- <textarea id="textField8" class="hidden8"></textarea> -->
+        </div>
+    </div>
+    <div class="container activity">
+        <div class="activity-title">
+            <label id="showActivityBtn">Posts</label>
+            <div class="rect">
+                <div id="postsContainer">
+                    {% for post in posts|slice:":3" %}  {# Display only the first 3 posts #}
+                        <div class="post-item">
+                            <div class="post-header">
+                                <h4>{{ post.posttitle }}</h4>
+                            </div>
+                            {% if post.postcontent %}
+                                <img src="{{ post.postcontent.url }}" alt="Post Image">
+                            {% endif %}
+                            <div class="post-content">
+                                <p>{{ post.postdesc }}</p>
+                                <small>Posted on: {{ post.postdttime|date:"F j, Y, g:i a" }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                
+                    {% if posts|length > 3 %}
+                        <div id="seeAllPosts">
+                            <a href="{% url 'see_all_posts' %}" class="btn btn-primary">See All Posts</a>
+                        </div>
+                    {% endif %}
+                </div>                 
+            </div>
+            <!-- Modal Structure -->
+            <div id="createPostModal" class="modal">
+                <div class="modal-content1">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>Create a Post</h2>
+    
+                    <!-- Post Creation Form -->
+                    <form id="postForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="media-upload">
+                            <input type="file" name="postcontent" id="fileInput" accept="image/*,video/*" />
+                            <p id="fileError" style="color: red; display: none;">Please select a valid image or video file.</p>
+                        </div>
+                        <input type="text" name="posttitle" placeholder="Post Title" id="postTitle" class="form-control" required />
+                        <textarea name="postdesc" placeholder="Write a caption..." id="postDesc" class="form-control" rows="4" required></textarea>
+                        <button type="submit" class="submit-post">Submit</button>
+                    </form> 
+                    <div id="seeAllPosts" style="display: none;">
+                        <a href="{% url 'see_all_posts' %}" class="btn btn-primary">See All Posts</a>
+                    </div>                   
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="container Experience">
+        <div class="Experience-title">
+            <label id="showExpBtn">Experience</label>
+            <div>
+                <ul>
+                    {% for exp in experience %}
+                        <li>{{ exp.organizationname }} - {{ exp.worktitle }} ({{ exp.startdate }} - {{ exp.enddate }})</li>
+                    {% empty %}
+                        <li>No work experience available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <textarea id="textField3" class="hidden3"></textarea>
+        </div>
+    </div>
+    <div class="container Education">
+        <div class="Education-title">
+            <label id="showEducationBtn">Education</label>
+            <div>
+                <ul>
+                    {% for edu in education %}
+                        <li>{{ edu.institute }} - {{ edu.passingyear }} ({{ edu.grade }})</li>
+                    {% empty %}
+                        <li>No education records found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <textarea id="textField4" class="hidden4"></textarea>
+        </div>
+    </div>
+    <div class="container Skills">
+        <div class="Skills-title">
+            <label id="showSkillsBtn">Skills</label>
+            <div>
+                <ul>
+                    {% for skill in skills %}
+                        <li>{{ skill.skills }} - {{ skill.details }}</li>
+                    {% empty %}
+                        <li>No skills added yet.</li>
+                    {% endfor %}
+                </ul>                
+            </div>
+            <textarea id="textField5" class="hidden5"></textarea>
+        </div>
+    </div>
+    <div class="container Links">
+        <div class="links-title">
+            <label id="showLinksBtn">Links</label>
+            <div>
+                <ul>
+                    {% for link in links %}
+                        <li><a href="{{ link.url }}">{{ link.link_name }}</a></li>
+                    {% empty %}
+                        <li>No links available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <textarea id="textField6" class="hidden6"></textarea>
+        </div>
+    </div>
+    <div class="container Languages">
+        <div class="languages-title">
+            <label id="showlanguagesBtn">Languages</label>
+            <div>
+                <ul>
+                    {% for lang in languages %}
+                        <li>{{ lang.language }} - {{ lang.proficiency }}</li>
+                    {% empty %}
+                        <li>No languages listed.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <textarea id="textField7" class="hidden7"></textarea>
+        </div>
+    </div>
+    
+</body>
+    <!-- <script src="{% static 'myapp/js/new_profile.js' %}" defer></script>  -->
+<!--bootstrap js-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</html>

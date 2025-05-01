@@ -1,0 +1,207 @@
+.crdcontainer{
+    margin-bottom: 70px;
+}
+.card img {
+    height: 200px; 
+    object-fit: cover; 
+    border-radius: 10px;
+    cursor: pointer;
+}
+.card-body {
+    background-color: #f8f9fa;
+    padding: 10px;
+}
+p {
+    font-size: 16px;
+    color: #333; 
+}
+.footer {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    text-align: left;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+}
+.backBtn{
+    background-color: #0962c7;
+    border: none;
+    height: 40px;
+    width: 10%;
+    border-radius: 7px;
+    font-weight: 600;
+    color: white;
+    font-size: 17px;
+} 
+.containers{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.card-text1{
+  text-align: center;
+}
+/*demo2.html*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    display: flex;
+    height: 80%;
+    position: relative;
+  }
+  
+  .close {
+    color: #232323;
+    float: right;
+    font-size: 28px;
+    font-weight: 800;
+    margin-left: 5px;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #6e6e6e;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+  }
+  
+  .left {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f0f0f0;
+  }
+  
+  .left .image-section {
+    flex: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .left .image-section img {
+    width: 60%;
+    height: 70%;
+  }
+  
+  .left .like-section {
+    flex: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #e0e0e0;
+    height: 15px;
+    padding-bottom: 10px;
+  } 
+  
+  .right {
+  position: relative;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+}
+
+  
+  .caption {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .comments {
+  flex-grow: 1; /* Allows the comments section to grow */
+  overflow-y: auto; /* Enables vertical scrolling */
+  padding-bottom: 70px; /* Leaves space for the comment-input */
+}
+  
+  .comment {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 5px 0;
+  }
+  
+  .comment img.profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  
+  .comment .comment-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .comment .username {
+    font-weight: bold;
+  }
+  
+  .comment-input {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  bottom: 2px;
+  right: 10px;
+  left: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  }
+  
+  .comment-input textarea {
+  flex: 1;
+  resize: none;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.comment-input button {
+  padding: 10px 20px;
+  background-color: #0962c7;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.comment-input button:hover {
+  background-color: #074a9b;
+}
+  
+  .likeBtn {
+    margin-right: 80%;
+    height: 25px;
+    width: 110px;
+    font-size: 20px;
+    border: none;
+    font-weight: 600;
+    background-color: #e0e0e0;
+  }

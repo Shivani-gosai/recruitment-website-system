@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create CV</title>
+    <link href="{% static 'myapp/cv_builder.css' %}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.jpg" alt="Logo">
+                FreshMinds
+            </div>
+            <nav class="nav1">
+                {% if request.session.user_type == "jobseeker" %}
+                <a href="/homepage">Home</a>
+                <a href="/job_card">Find job</a>
+                <a href="/applied_jobs">Applied Jobs</a>
+                {% endif %}
+                {% if request.session.user_type == "business" %}
+                <a href="/homepage">Home</a>
+                <a href="#">Hiring</a>
+                <a href="#">Notification</a>
+                {% if organization %}
+                    <a href="{% url 'cmpjob' organization.id %}">Post Job</a>
+                {% else %}
+                    <a href="#" onclick="alert('Organization data not loaded')">Post Job</a>
+                {% endif %}
+                {% endif %}
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn btn-dark bg-black" data-bs-toggle="modal"
+                    data-bs-target="#settingsModal">
+                    <i class="fa-solid fa-gear fs-5" style="color: #ffffff;"></i>
+                </button>
+    
+            </div>
+        </div>
+    </header>
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark">
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="/profile" class="text-decoration-none text-light">Edit Profile</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/" class="text-decoration-none text-danger">Log Out</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/changepassword" class="text-decoration-none text-danger">Change Password</a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/forgetpassword" class="text-decoration-none text-danger">Forgot Password</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">&nbsp;&nbsp;Close&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+
+        <h2 class="name">{{ member.firstname }} {{ member.lastname }}</h2>
+        <p class="position">{{ member.position }}</p>
+        <div class="contact-info">
+            <p>{{member.eemail}} | {{member.phoneno}} | {{member.address}}</p>
+        </div>
+
+        <h2>CV Details</h2>
+        
+        <h3>Add Summary</h3>
+        <div class="btn-group">
+            <button class="btn btn-dark" onclick="toggleForm('summaryForm')">Add Summary</button>
+        </div>
+        <div id="summaryForm" class="form-container" style="display: none; margin-top: 10px;">
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                <textarea name="summary" class="form-control" placeholder="Add your summary here..." rows="4"></textarea>
+                <button type="submit" class="btn btn-dark mt-2" name="summary_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for sum in summary %}
+        <div class="entry">
+            <p>{{ sum.summary }}</p> <!-- Displaying 'summary' field -->
+            <a href="{% url 'delete_summary' sum.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+
+
+        <!-- Buttons to toggle forms -->
+        <h3>Add Education</h3>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="toggleForm('educationForm')">Add Education</button>
+        </div>
+        <!-- Education Form -->
+        <div id="educationForm" class="form-container">
+            <h3>Add Education</h3>
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                {{ edu_form.as_p }}
+                <button type="submit" class="btn btn-primary" name="education_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for edu in education %}
+        <div class="entry">
+            <p>{{ edu.institute }} - {{ edu.passingyear }} ({{ edu.grade }})</p>
+            <a href="{% url 'delete_education' edu.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+
+        <!-- Skills Form -->
+        <h3>Add Skills</h3>
+        <div class="btn-group">
+        <button class="btn btn-success" onclick="toggleForm('skillsForm')">Add Skills</button>
+        </div>
+        <div id="skillsForm" class="form-container">
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                {{ skills_form.as_p }}
+                <button type="submit" class="btn btn-success" name="skills_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for skill in skills %}
+        <div class="entry">
+            <p>{{ skill.skills }} - {{ skill.details }}</p>
+            <a href="{% url 'delete_skill' skill.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+
+
+        <!-- Experience Form -->
+        <h3>Add Experience</h3>
+         <div class="btn-group">
+        <button class="btn btn-warning" onclick="toggleForm('experienceForm')">Add Experience</button>
+        </div>
+        <div id="experienceForm" class="form-container">
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                {{ exp_form.as_p }}
+                <button type="submit" class="btn btn-warning" name="experience_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for exp in experience %}
+        <div class="entry">
+            <p>{{ exp.organizationname }} - {{ exp.worktitle }} ({{ exp.startdate }} - {{ exp.enddate|default:"Present" }})</p>
+            <p><strong>{{ exp.totalmonthexperience }} months</strong> experience</p>
+            <a href="{% url 'delete_experience' exp.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+
+        <!-- Language Form -->
+        <h3>Add Language</h3>
+        <div class="btn-group">
+        <button class="btn btn-info" onclick="toggleForm('languageForm')">Add Language</button>
+        </div>
+        <div id="languageForm" class="form-container">
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                {{ lang_form.as_p }}
+                <button type="submit" class="btn btn-info" name="language_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for lang in languages %}
+        <div class="entry">
+            <p>{{ lang.language }}</p>
+            <a href="{% url 'delete_language' lang.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+
+
+        <!-- Link Form -->
+        <h3>Add Link</h3>
+        <div class="btn-group">
+            <button class="btn btn-dark" onclick="toggleForm('linkForm')">Add Link</button>
+        </div>
+        <div id="linkForm" class="form-container">
+            <div class="btn-group">
+                <button class="btn btn-dark" onclick="toggleForm('linkForm')">Add Link</button>
+            </div>
+            <form method="POST" action="{% url 'add_cv' %}">
+                {% csrf_token %}
+                {{ link_form.as_p }}
+                <button type="submit" class="btn btn-dark" name="link_form">Save</button>
+            </form>
+        </div>
+        <hr>
+        {% for link in links %}
+        <div class="entry">
+            <p><a href="{{ link.link_url }}" target="_blank">{{ link.link_name }}</a></p>
+            <a href="{% url 'delete_link' link.id %}" class="delete-btn"><i class="fa fa-trash"></i></a>
+        </div>
+        {% endfor %}
+        <!-- Displaying Existing Data with Delete Buttons -->
+
+ 
+    <a href="/profile"><button id="saveCVBtn" class="save" >Save CV</button></a>
+    </div>
+</body>
+<script>
+    function toggleForm(formId) {
+    let form = document.getElementById(formId);
+    
+    // If form is already visible, hide it; otherwise, show it
+    if (form.style.display === "block") {
+        form.style.display = "none";
+    } else {
+        // Hide all other forms before showing the selected one
+        document.querySelectorAll(".form-container").forEach(form => {
+            form.style.display = "none";
+        });
+
+        form.style.display = "block";
+    }
+}
+/*function toggleForm(formId) {
+document.querySelectorAll(".form-container").forEach(form => {
+    form.style.display = "none";
+});
+document.getElementById(formId).style.display = "block";
+}*/
+/*function toggleForm(formId) {
+    const form = document.getElementById(formId);
+    if (form.style.display === "block") {
+        form.style.display = "none";
+    } else {
+        form.style.display = "block";
+    }
+}*/
+// Summary editing functions
+function enableEdit1() {
+const editableDiv1 = document.getElementById('editableText1');
+const textField1 = document.getElementById('textField1');
+
+// Set textarea value to current div text
+textField1.value = editableDiv1.textContent;
+editableDiv1.style.display = 'none'; // Hide div
+textField1.classList.remove('hidden'); // Show textarea
+textField1.focus();
+}
+
+function updateText1() {
+const editableDiv1 = document.getElementById('editableText1');
+const textField1 = document.getElementById('textField1');
+
+// Set div text to textarea value
+editableDiv1.textContent = textField1.value;
+textField1.classList.add('hidden'); // Hide textarea
+editableDiv1.style.display = 'block'; // Show div
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</html>
